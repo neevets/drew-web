@@ -28,8 +28,54 @@
       </div>
     </header>
 
-    <main class="status-page">
-      <p>We're working here...</p>
+    <main class="dashboard-shell">
+      <section class="dashboard-auth">
+        <div>
+          <span class="dashboard-auth__eyebrow">Account &amp; security</span>
+          <h1>Connect your Discord to continue.</h1>
+          <p>
+            Authenticate with the Drew bot to register your email, name, and profile photo. Once connected, you will be
+            able to manage servers and see your subscription status.
+          </p>
+          <div class="dashboard-auth__actions">
+            <a class="cta" href="/api/auth/discord">Connect with Discord</a>
+            <a class="ghost" href="https://discord.gg/5e2jm7QDSS" target="_blank" rel="noreferrer">Need help</a>
+          </div>
+          <div class="dashboard-auth__meta">
+            <span>Required scope: <strong>identify</strong> + <strong>email</strong> + <strong>guilds</strong></span>
+            <span>We only request basic account information.</span>
+          </div>
+        </div>
+        <div class="dashboard-auth__card">
+          <div class="dashboard-auth__avatar" aria-hidden="true">
+            <span>DD</span>
+          </div>
+          <div class="dashboard-auth__details">
+            <h2>Data we will store</h2>
+            <ul>
+              <li>Verified email for access.</li>
+              <li>Name and avatar to personalize your panel.</li>
+              <li>User ID to link your servers.</li>
+              <li>Server list access to sync your guilds.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="dashboard-card">
+          <h3>Secure connection</h3>
+          <p>Access uses Discord OAuth2 and session tokens.</p>
+        </article>
+        <article class="dashboard-card">
+          <h3>Personalized dashboard</h3>
+          <p>See bot status, alerts, and community-specific settings.</p>
+        </article>
+        <article class="dashboard-card">
+          <h3>Everything in one place</h3>
+          <p>We sync email, username, and avatar for a consistent experience.</p>
+        </article>
+      </section>
     </main>
 
     <footer class="footer">
