@@ -27,7 +27,7 @@ export class AuthController {
     return response.redirect(`https://discord.com/api/oauth2/authorize?${params.toString()}`);
   }
 
-  @Get("/discord/callback")
+  @Get("/callback")
   async handleDiscordCallback(@Query("code") code: string, @Res() response: Response) {
     if (!code) {
       return response.status(400).json({
