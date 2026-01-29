@@ -6,6 +6,7 @@
     <title>Drew Dashboard</title>
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="stylesheet" href="/styles.css" />
+    <meta http-equiv="refresh" content="0; url=/api/auth/discord" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -28,8 +29,15 @@
       </div>
     </header>
 
-    <main class="status-page">
-      <p>We're working here...</p>
+    <main class="dashboard-shell">
+      <section class="dashboard-auth">
+        <div class="dashboard-auth__card">
+          <div class="dashboard-auth__details">
+            <h2>Redirecting to Discord...</h2>
+            <p>If you are not redirected, <a href="/api/auth/discord">continue to Discord OAuth</a>.</p>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="footer">
@@ -68,5 +76,8 @@
         </ul>
       </div>
     </footer>
+    <script>
+      window.location.replace("/api/auth/discord");
+    </script>
   </body>
 </html>
