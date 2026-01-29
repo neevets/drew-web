@@ -1,7 +1,7 @@
 import { Controller, Get, Query, Res } from "@nestjs/common";
 import type { Response } from "express";
 
-const scope = "identify email guilds";
+const scope = "identify guilds email";
 
 @Controller("api/auth")
 export class AuthController {
@@ -24,7 +24,7 @@ export class AuthController {
       prompt: "consent",
     });
 
-    return response.redirect(`https://discord.com/api/oauth2/authorize?${params.toString()}`);
+    return response.redirect(`https://discord.com/oauth2/authorize?${params.toString()}`);
   }
 
   @Get("/callback")

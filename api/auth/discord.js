@@ -12,9 +12,9 @@ module.exports = (request, response) => {
     client_id: clientId,
     redirect_uri: redirectUri,
     response_type: "code",
-    scope: "identify email guilds",
+    scope: "identify guilds email",
     prompt: "consent",
   });
 
-  return response.redirect(`https://discord.com/api/oauth2/authorize?${params.toString()}`);
+  return response.redirect(`https://discord.com/oauth2/authorize?${params.toString()}`);
 };
