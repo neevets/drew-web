@@ -828,6 +828,50 @@ html[data-theme="dark"] .glass-card {
   gap: 24px;
 }
 
+.dashboard-shell {
+  padding: 48px 6vw 80px;
+  display: grid;
+  gap: 40px;
+}
+
+.dashboard-auth {
+  display: grid;
+  gap: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 32px;
+}
+
+.dashboard-auth__card {
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 24px;
+  background: var(--panel);
+  display: grid;
+  gap: 20px;
+}
+
+.dashboard-auth__details h2 {
+  margin-bottom: 12px;
+}
+
+.dashboard-auth__details ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  display: grid;
+  gap: 8px;
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
 .dashboard-card {
   background: var(--panel);
   border: 1px solid var(--stroke);
