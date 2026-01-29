@@ -845,38 +845,6 @@ html[data-theme="dark"] .glass-card {
   padding: 32px;
 }
 
-.dashboard-auth h1 {
-  font-size: clamp(2rem, 3vw, 2.6rem);
-  margin-bottom: 16px;
-}
-
-.dashboard-auth p {
-  color: var(--muted);
-  margin-bottom: 24px;
-}
-
-.dashboard-auth__eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: 0.72rem;
-  color: var(--muted);
-  font-weight: 600;
-}
-
-.dashboard-auth__actions {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.dashboard-auth__meta {
-  display: grid;
-  gap: 8px;
-  margin-top: 24px;
-  font-size: 0.9rem;
-  color: var(--muted);
-}
-
 .dashboard-auth__card {
   border: 1px solid var(--stroke);
   border-radius: var(--radius);
@@ -884,19 +852,6 @@ html[data-theme="dark"] .glass-card {
   background: var(--panel);
   display: grid;
   gap: 20px;
-}
-
-.dashboard-auth__avatar {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #f2b400, #0d0d0d);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1.1rem;
 }
 
 .dashboard-auth__details h2 {
