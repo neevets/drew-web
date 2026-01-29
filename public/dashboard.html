@@ -28,8 +28,53 @@
       </div>
     </header>
 
-    <main class="status-page">
-      <p>We're working here...</p>
+    <main class="dashboard-shell">
+      <section class="dashboard-auth">
+        <div>
+          <span class="dashboard-auth__eyebrow">Cuenta &amp; seguridad</span>
+          <h1>Conecta tu Discord para continuar.</h1>
+          <p>
+            Autentica con el bot de Drew para registrar tu correo, nombre y foto de perfil. Una vez conectado,
+            podrás administrar los servidores y ver el estado de tu suscripción.
+          </p>
+          <div class="dashboard-auth__actions">
+            <a class="cta" href="/api/auth/discord">Conectar con Discord</a>
+            <a class="ghost" href="https://discord.gg/5e2jm7QDSS" target="_blank" rel="noreferrer">Necesito ayuda</a>
+          </div>
+          <div class="dashboard-auth__meta">
+            <span>Scope requerido: <strong>identify</strong> + <strong>email</strong></span>
+            <span>Solo pedimos información básica de tu cuenta.</span>
+          </div>
+        </div>
+        <div class="dashboard-auth__card">
+          <div class="dashboard-auth__avatar" aria-hidden="true">
+            <span>DD</span>
+          </div>
+          <div class="dashboard-auth__details">
+            <h2>Datos que vamos a guardar</h2>
+            <ul>
+              <li>Correo verificado para acceso.</li>
+              <li>Nombre y avatar para personalizar tu panel.</li>
+              <li>ID de usuario para enlazar tus servidores.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="dashboard-card">
+          <h3>Conexión segura</h3>
+          <p>El acceso se realiza mediante OAuth2 de Discord y tokens de sesión.</p>
+        </article>
+        <article class="dashboard-card">
+          <h3>Panel personalizado</h3>
+          <p>Verás el estado del bot, alertas y configuraciones específicas de tu comunidad.</p>
+        </article>
+        <article class="dashboard-card">
+          <h3>Datos en un solo lugar</h3>
+          <p>Sincronizamos correo, usuario y foto para darte una experiencia consistente.</p>
+        </article>
+      </section>
     </main>
 
     <footer class="footer">
