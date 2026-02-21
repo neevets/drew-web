@@ -49,6 +49,12 @@ const renderGuildCard = (guild) => {
   `;
 };
 
+const renderGuildSelectorButton = (guild, isActive) => {
+  const guildName = escapeHtml(guild.name || "Servidor sin nombre");
+
+  return `<button class="oauth-server-chip${isActive ? " oauth-server-chip--active" : ""}" type="button" data-guild-select data-guild-id="${escapeHtml(guild.id)}" data-guild-name="${guildName}">${guildName}</button>`;
+};
+
 const renderAuthPage = (user, guilds) => {
   const avatarUrl = avatarUrlFor(user);
   const safeDisplayName = escapeHtml(user.global_name || user.username || "Usuario");
@@ -60,6 +66,7 @@ const renderAuthPage = (user, guilds) => {
     return guild.owner || isAdmin;
   });
   const totalGuilds = manageableGuilds.length;
+  const selectedGuild = manageableGuilds[0] ?? null;
 
   return `<!doctype html>
 <html lang="es">
@@ -203,6 +210,120 @@ const renderAuthPage = (user, guilds) => {
         background: var(--accent);
         color: var(--cta-text);
       }
+
+      .oauth-server-selector {
+        display: grid;
+        gap: 16px;
+      }
+
+      .oauth-server-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .oauth-server-chip {
+        border: 1px solid var(--stroke);
+        background: var(--card);
+        color: var(--text);
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .oauth-server-chip--active {
+        border-color: #3f6bff;
+        box-shadow: 0 0 0 2px rgba(63, 107, 255, 0.25);
+      }
+
+      .guild-dashboard {
+        background: radial-gradient(circle at top, #07153d 0%, #040b22 65%, #020617 100%);
+        border-color: #1b2d66;
+        color: #e8eeff;
+        display: grid;
+        gap: 18px;
+      }
+
+      .guild-dashboard__intro {
+        color: #9fb1df;
+        margin: 0;
+        font-size: 1.1rem;
+      }
+
+      .guild-dashboard__tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .guild-dashboard__tab {
+        border: 1px solid #2a3f7a;
+        background: rgba(16, 30, 72, 0.75);
+        color: #d9e4ff;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-weight: 600;
+      }
+
+      .guild-dashboard__tab--active {
+        border-color: #3f6bff;
+        box-shadow: 0 0 0 2px rgba(63, 107, 255, 0.3);
+      }
+
+      .guild-dashboard__title {
+        margin: 0;
+        font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+        letter-spacing: 0.08em;
+      }
+
+      .guild-dashboard__description {
+        margin: 0;
+        color: #b8c7f0;
+        line-height: 1.45;
+        max-width: 68ch;
+      }
+
+      .guild-dashboard__rule {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr auto;
+        gap: 10px;
+        align-items: center;
+        border: 1px solid #2a3f7a;
+        border-radius: 14px;
+        padding: 14px;
+        background: rgba(16, 30, 72, 0.75);
+      }
+
+      .guild-dashboard__rule input,
+      .guild-dashboard__rule select {
+        background: #111f4b;
+        border: 1px solid #2f4587;
+        color: #e7eeff;
+        border-radius: 10px;
+        padding: 8px 10px;
+      }
+
+      .guild-dashboard__apply {
+        width: 42px;
+        height: 42px;
+        border: 0;
+        border-radius: 12px;
+        background: #3f6bff;
+        color: #fff;
+        font-size: 1.4rem;
+      }
+
+      .oauth-empty {
+        color: var(--muted);
+      }
+
+      @media (max-width: 860px) {
+        .guild-dashboard__rule {
+          grid-template-columns: 1fr;
+        }
+      }
+
     </style>
   </head>
   <body>
@@ -240,9 +361,53 @@ const renderAuthPage = (user, guilds) => {
       </section>
 
 
+      <section class="dashboard-card oauth-server-selector">
+        <div class="oauth-guilds__header">
+          <h2>Selecciona un servidor</h2>
+          <p>${totalGuilds} disponibles</p>
+        </div>
+        ${
+          totalGuilds
+            ? `<div class="oauth-server-chips">${manageableGuilds
+                .map((guild, index) => renderGuildSelectorButton(guild, index === 0))
+                .join("")}</div>`
+            : '<p class="oauth-empty">No encontramos servidores donde tengas permisos de owner/admin.</p>'
+        }
+      </section>
+
+      ${
+        selectedGuild
+          ? `<section class="dashboard-card guild-dashboard" data-guild-dashboard>
+              <p class="guild-dashboard__intro">You are managing <strong data-guild-name>${escapeHtml(selectedGuild.name || "Servidor sin nombre")}</strong></p>
+              <div class="guild-dashboard__tabs">
+                <button type="button" class="guild-dashboard__tab">General</button>
+                <button type="button" class="guild-dashboard__tab guild-dashboard__tab--active">Anti Nuke</button>
+                <button type="button" class="guild-dashboard__tab">Beast Mode</button>
+                <button type="button" class="guild-dashboard__tab">Anti Raid</button>
+                <button type="button" class="guild-dashboard__tab">Verification</button>
+                <button type="button" class="guild-dashboard__tab">Moderation</button>
+              </div>
+              <h3 class="guild-dashboard__title">ANTI NUKE</h3>
+              <p class="guild-dashboard__description">Keep your server safe from users that take advantage of their permissions to destroy your lovely community. Configure limits, punishments and logging for the selected server.</p>
+              <div class="guild-dashboard__rule">
+                <strong>ANTI BAN</strong>
+                <label>Limit <input type="number" value="5" min="1" max="30" /></label>
+                <label>Punishment
+                  <select>
+                    <option>Kick</option>
+                    <option>Ban</option>
+                    <option>Timeout</option>
+                  </select>
+                </label>
+                <button class="guild-dashboard__apply" type="button" aria-label="Guardar configuración">✓</button>
+              </div>
+            </section>`
+          : ""
+      }
+
       <section class="dashboard-card oauth-guilds">
         <div class="oauth-guilds__header">
-          <h2>Tus servidores</h2>
+          <h2>Servidores gestionables</h2>
           <p>${totalGuilds} encontrados</p>
         </div>
         <div class="oauth-guilds-list">
@@ -284,6 +449,27 @@ const renderAuthPage = (user, guilds) => {
         </ul>
       </div>
     </footer>
+
+    <script>
+      (() => {
+        const selectorButtons = Array.from(document.querySelectorAll('[data-guild-select]'));
+        const guildNameNode = document.querySelector('[data-guild-name]');
+
+        if (!selectorButtons.length || !guildNameNode) {
+          return;
+        }
+
+        selectorButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+            selectorButtons.forEach((other) => {
+              other.classList.remove('oauth-server-chip--active');
+            });
+            button.classList.add('oauth-server-chip--active');
+            guildNameNode.textContent = button.dataset.guildName || 'Servidor sin nombre';
+          });
+        });
+      })();
+    </script>
   </body>
 </html>`;
 };
