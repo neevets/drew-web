@@ -54,12 +54,12 @@ const renderAuthPage = (user, guilds) => {
   const safeDisplayName = escapeHtml(user.global_name || user.username || "Usuario");
   const safeUsername = escapeHtml(user.username || "unknown");
   const safeEmail = escapeHtml(user.email || "No disponible");
-  const totalGuilds = guilds.length;
-  const ownerGuilds = guilds.filter((guild) => guild.owner).length;
-  const adminGuilds = guilds.filter((guild) => {
+  const manageableGuilds = guilds.filter((guild) => {
     const permissions = Number(guild.permissions_new ?? guild.permissions ?? 0);
-    return (permissions & 0x8) === 0x8;
-  }).length;
+    const isAdmin = (permissions & 0x8) === 0x8;
+    return guild.owner || isAdmin;
+  });
+  const totalGuilds = manageableGuilds.length;
 
   return `<!doctype html>
 <html lang="es">
@@ -223,20 +223,6 @@ const renderAuthPage = (user, guilds) => {
 
     <main class="dashboard-shell oauth-grid">
       <section class="dashboard-auth">
-        <div>
-          <p class="dashboard-auth__eyebrow">Discord OAuth</p>
-          <h1>Autenticación completada</h1>
-          <p>¡Listo! Ya conectaste tu cuenta de Discord con Drew. Aquí tienes el resumen de tus servidores y permisos.</p>
-          <div class="dashboard-auth__actions">
-            <a class="cta" href="/api/auth/discord">Ir al dashboard</a>
-            <a class="ghost" href="/api/auth/discord">Reautenticar</a>
-          </div>
-          <div class="dashboard-auth__meta">
-            <span>Estado: autenticado</span>
-            <span>Usuario: @${safeUsername}</span>
-          </div>
-        </div>
-
         <article class="dashboard-auth__card">
           <div class="oauth-profile">
             ${
@@ -253,20 +239,6 @@ const renderAuthPage = (user, guilds) => {
         </article>
       </section>
 
-      <section class="oauth-stats">
-        <article class="dashboard-card oauth-stat">
-          <h3>Servidores totales</h3>
-          <p>${totalGuilds}</p>
-        </article>
-        <article class="dashboard-card oauth-stat">
-          <h3>Servidores owner</h3>
-          <p>${ownerGuilds}</p>
-        </article>
-        <article class="dashboard-card oauth-stat">
-          <h3>Servidores admin</h3>
-          <p>${adminGuilds}</p>
-        </article>
-      </section>
 
       <section class="dashboard-card oauth-guilds">
         <div class="oauth-guilds__header">
@@ -274,7 +246,7 @@ const renderAuthPage = (user, guilds) => {
           <p>${totalGuilds} encontrados</p>
         </div>
         <div class="oauth-guilds-list">
-          ${guilds.map(renderGuildCard).join("")}
+          ${manageableGuilds.map(renderGuildCard).join("")}
         </div>
       </section>
     </main>
@@ -316,13 +288,22 @@ const renderAuthPage = (user, guilds) => {
 </html>`;
 };
 
+const redirectToDiscordAuth = (response) =>
+  response.redirect(302, "/api/auth/discord");
+
+const parseJsonSafely = (value) => {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+};
+
 module.exports = async (request, response) => {
   const code = request.query.code;
 
-  if (!code) {
-    return response.status(400).json({
-      error: "Missing Discord OAuth code.",
-    });
+  if (!code || typeof code !== "string") {
+    return redirectToDiscordAuth(response);
   }
 
   const clientId = process.env.DISCORD_CLIENT_ID;
@@ -354,6 +335,12 @@ module.exports = async (request, response) => {
 
     if (!tokenResponse.ok) {
       const errorBody = await tokenResponse.text();
+      const tokenError = parseJsonSafely(errorBody);
+
+      if (tokenError?.error === "invalid_grant") {
+        return redirectToDiscordAuth(response);
+      }
+
       return response.status(502).json({
         error: "Failed to exchange Discord OAuth code.",
         details: errorBody,
