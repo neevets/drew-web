@@ -316,13 +316,22 @@ const renderAuthPage = (user, guilds) => {
 </html>`;
 };
 
+const redirectToDiscordAuth = (response) =>
+  response.redirect(302, "/api/auth/discord");
+
+const parseJsonSafely = (value) => {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+};
+
 module.exports = async (request, response) => {
   const code = request.query.code;
 
-  if (!code) {
-    return response.status(400).json({
-      error: "Missing Discord OAuth code.",
-    });
+  if (!code || typeof code !== "string") {
+    return redirectToDiscordAuth(response);
   }
 
   const clientId = process.env.DISCORD_CLIENT_ID;
@@ -354,6 +363,12 @@ module.exports = async (request, response) => {
 
     if (!tokenResponse.ok) {
       const errorBody = await tokenResponse.text();
+      const tokenError = parseJsonSafely(errorBody);
+
+      if (tokenError?.error === "invalid_grant") {
+        return redirectToDiscordAuth(response);
+      }
+
       return response.status(502).json({
         error: "Failed to exchange Discord OAuth code.",
         details: errorBody,
