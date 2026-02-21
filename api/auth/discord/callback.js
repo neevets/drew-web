@@ -214,7 +214,7 @@ const renderAuthPage = (user, guilds) => {
         <a href="https://discord.gg/5e2jm7QDSS" target="_blank" rel="noreferrer">Support</a>
       </nav>
       <div class="topbar__actions">
-        <a class="cta cta--small" href="/dashboard.html">Dashboard</a>
+        <a class="cta cta--small" href="/api/auth/discord">Dashboard</a>
         <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark mode">
           <span class="theme-toggle__text" data-theme-label>light</span>
         </button>
@@ -228,7 +228,7 @@ const renderAuthPage = (user, guilds) => {
           <h1>Autenticación completada</h1>
           <p>¡Listo! Ya conectaste tu cuenta de Discord con Drew. Aquí tienes el resumen de tus servidores y permisos.</p>
           <div class="dashboard-auth__actions">
-            <a class="cta" href="/dashboard.html">Ir al dashboard</a>
+            <a class="cta" href="/api/auth/discord">Ir al dashboard</a>
             <a class="ghost" href="/api/auth/discord">Reautenticar</a>
           </div>
           <div class="dashboard-auth__meta">
@@ -289,7 +289,7 @@ const renderAuthPage = (user, guilds) => {
         <h4>Product</h4>
         <ul>
           <li><a href="/premium.html">Premium</a></li>
-          <li><a href="/dashboard.html">Dashboard</a></li>
+          <li><a href="/api/auth/discord">Dashboard</a></li>
           <li>
             <a href="https://discord.com/oauth2/authorize?client_id=1441457111409103010&permissions=8&integration_type=0&scope=bot+applications.commands">Invite</a>
           </li>
