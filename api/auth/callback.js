@@ -60,11 +60,6 @@ const renderAuthPage = (user, guilds) => {
     return guild.owner || isAdmin;
   });
   const totalGuilds = manageableGuilds.length;
-  const ownerGuilds = manageableGuilds.filter((guild) => guild.owner).length;
-  const adminGuilds = manageableGuilds.filter((guild) => {
-    const permissions = Number(guild.permissions_new ?? guild.permissions ?? 0);
-    return (permissions & 0x8) === 0x8;
-  }).length;
 
   return `<!doctype html>
 <html lang="es">
@@ -258,20 +253,6 @@ const renderAuthPage = (user, guilds) => {
         </article>
       </section>
 
-      <section class="oauth-stats">
-        <article class="dashboard-card oauth-stat">
-          <h3>Servidores totales</h3>
-          <p>${totalGuilds}</p>
-        </article>
-        <article class="dashboard-card oauth-stat">
-          <h3>Servidores owner</h3>
-          <p>${ownerGuilds}</p>
-        </article>
-        <article class="dashboard-card oauth-stat">
-          <h3>Servidores admin</h3>
-          <p>${adminGuilds}</p>
-        </article>
-      </section>
 
       <section class="dashboard-card oauth-guilds">
         <div class="oauth-guilds__header">
