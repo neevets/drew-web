@@ -54,9 +54,14 @@ const renderAuthPage = (user, guilds) => {
   const safeDisplayName = escapeHtml(user.global_name || user.username || "Usuario");
   const safeUsername = escapeHtml(user.username || "unknown");
   const safeEmail = escapeHtml(user.email || "No disponible");
-  const totalGuilds = guilds.length;
-  const ownerGuilds = guilds.filter((guild) => guild.owner).length;
-  const adminGuilds = guilds.filter((guild) => {
+  const manageableGuilds = guilds.filter((guild) => {
+    const permissions = Number(guild.permissions_new ?? guild.permissions ?? 0);
+    const isAdmin = (permissions & 0x8) === 0x8;
+    return guild.owner || isAdmin;
+  });
+  const totalGuilds = manageableGuilds.length;
+  const ownerGuilds = manageableGuilds.filter((guild) => guild.owner).length;
+  const adminGuilds = manageableGuilds.filter((guild) => {
     const permissions = Number(guild.permissions_new ?? guild.permissions ?? 0);
     return (permissions & 0x8) === 0x8;
   }).length;
@@ -274,7 +279,7 @@ const renderAuthPage = (user, guilds) => {
           <p>${totalGuilds} encontrados</p>
         </div>
         <div class="oauth-guilds-list">
-          ${guilds.map(renderGuildCard).join("")}
+          ${manageableGuilds.map(renderGuildCard).join("")}
         </div>
       </section>
     </main>
@@ -316,13 +321,22 @@ const renderAuthPage = (user, guilds) => {
 </html>`;
 };
 
+const redirectToDiscordAuth = (response) =>
+  response.redirect(302, "/api/auth/discord");
+
+const parseJsonSafely = (value) => {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+};
+
 module.exports = async (request, response) => {
   const code = request.query.code;
 
-  if (!code) {
-    return response.status(400).json({
-      error: "Missing Discord OAuth code.",
-    });
+  if (!code || typeof code !== "string") {
+    return redirectToDiscordAuth(response);
   }
 
   const clientId = process.env.DISCORD_CLIENT_ID;
@@ -354,6 +368,12 @@ module.exports = async (request, response) => {
 
     if (!tokenResponse.ok) {
       const errorBody = await tokenResponse.text();
+      const tokenError = parseJsonSafely(errorBody);
+
+      if (tokenError?.error === "invalid_grant") {
+        return redirectToDiscordAuth(response);
+      }
+
       return response.status(502).json({
         error: "Failed to exchange Discord OAuth code.",
         details: errorBody,
