@@ -223,20 +223,6 @@ const renderAuthPage = (user, guilds) => {
 
     <main class="dashboard-shell oauth-grid">
       <section class="dashboard-auth">
-        <div>
-          <p class="dashboard-auth__eyebrow">Discord OAuth</p>
-          <h1>Autenticación completada</h1>
-          <p>¡Listo! Ya conectaste tu cuenta de Discord con Drew. Aquí tienes el resumen de tus servidores y permisos.</p>
-          <div class="dashboard-auth__actions">
-            <a class="cta" href="/api/auth/discord">Ir al dashboard</a>
-            <a class="ghost" href="/api/auth/discord">Reautenticar</a>
-          </div>
-          <div class="dashboard-auth__meta">
-            <span>Estado: autenticado</span>
-            <span>Usuario: @${safeUsername}</span>
-          </div>
-        </div>
-
         <article class="dashboard-auth__card">
           <div class="oauth-profile">
             ${
