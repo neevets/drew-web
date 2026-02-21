@@ -54,9 +54,14 @@ const renderAuthPage = (user, guilds) => {
   const safeDisplayName = escapeHtml(user.global_name || user.username || "Usuario");
   const safeUsername = escapeHtml(user.username || "unknown");
   const safeEmail = escapeHtml(user.email || "No disponible");
-  const totalGuilds = guilds.length;
-  const ownerGuilds = guilds.filter((guild) => guild.owner).length;
-  const adminGuilds = guilds.filter((guild) => {
+  const manageableGuilds = guilds.filter((guild) => {
+    const permissions = Number(guild.permissions_new ?? guild.permissions ?? 0);
+    const isAdmin = (permissions & 0x8) === 0x8;
+    return guild.owner || isAdmin;
+  });
+  const totalGuilds = manageableGuilds.length;
+  const ownerGuilds = manageableGuilds.filter((guild) => guild.owner).length;
+  const adminGuilds = manageableGuilds.filter((guild) => {
     const permissions = Number(guild.permissions_new ?? guild.permissions ?? 0);
     return (permissions & 0x8) === 0x8;
   }).length;
@@ -274,7 +279,7 @@ const renderAuthPage = (user, guilds) => {
           <p>${totalGuilds} encontrados</p>
         </div>
         <div class="oauth-guilds-list">
-          ${guilds.map(renderGuildCard).join("")}
+          ${manageableGuilds.map(renderGuildCard).join("")}
         </div>
       </section>
     </main>
