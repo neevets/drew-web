@@ -69,9 +69,6 @@ const renderAuthPage = (user, guilds) => {
     <title>Drew Dashboard</title>
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="stylesheet" href="/styles.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <script defer src="https://va.vercel-scripts.com/v1/script.js"></script>
     <script defer src="/theme.js"></script>
     <style>
